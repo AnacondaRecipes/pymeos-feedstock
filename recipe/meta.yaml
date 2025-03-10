@@ -6,8 +6,6 @@ package:
   version: {{ version }}
 
 source:
-  #url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  #sha256: f941599d6f836d785c3b9ae14b53dc86fcb67881e5b5669ec8c2804245f4d7a0
   url: https://github.com/MobilityDB/PyMEOS/archive/refs/tags/v{{ version }}.tar.gz
   sha256: 6c59eb6c2dfbf41b8fc7789301a46f37f9dbd80366cd08209b55e75c15b208b0
   
