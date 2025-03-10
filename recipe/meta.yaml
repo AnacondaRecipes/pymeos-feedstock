@@ -12,7 +12,8 @@ source:
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: True  # [py<38]
+  # meos and pymeos-cffi is not available on win-64 and s390x
+  skip: True  # [s390x or win or py<38]
 
 requirements:
   host:
