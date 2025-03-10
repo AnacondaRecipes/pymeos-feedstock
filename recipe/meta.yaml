@@ -1,34 +1,41 @@
 {% set name = "pymeos" %}
-{% set major = 1 %}
-{% set minor = 2 %}
-{% set patch = 0 %}
-{% set version = major ~ '.' ~ minor ~ '.' ~ patch %}
-{% set minor_version = major ~ '.' ~ minor %}
-{% set next_minor_version = major ~ '.' ~ (minor + 1) %}
+{% set version = "1.2.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: f941599d6f836d785c3b9ae14b53dc86fcb67881e5b5669ec8c2804245f4d7a0
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: True  # [py<38]
 
 requirements:
   host:
-    - python {{ python_min }}
+    - python
     - setuptools >=61.0
+    - wheel
     - pip
   run:
-    - python >={{ python_min }}
-    - pymeos-cffi >={{ minor_version }},<{{ next_minor_version }}
+    - python
+    - pymeos-cffi >=1.2.0,<2
     - python-dateutil
-    - shapely
+    - shapely >=2.0.0
+  run_constrained:
+    # dbp
+    - psycopg
+    # dbp2 
+    - psycopg2
+    # dba
+    - asyncpg
+    # plot 
+    - matplotlib
+    # pandas 
+    - geopandas
 
 test:
   imports:
@@ -37,7 +44,7 @@ test:
     - pip check
     - python -c "import pymeos; pymeos.pymeos_initialize('UTC'); pymeos.pymeos_finalize();"
   requires:
-    - python {{ python_min }}
+    - python
     - pip
 
 about:
@@ -48,6 +55,7 @@ about:
     in Python without having to worry about the underlying C code.
   license: PostgreSQL
   license_file: LICENSE.txt
+  license_family: OTHER
   home: https://pymeos.readthedocs.io
   doc_url: https://pymeos.readthedocs.io
   dev_url: https://github.com/MobilityDB/PyMEOS
