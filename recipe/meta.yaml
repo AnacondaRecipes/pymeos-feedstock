@@ -15,17 +15,18 @@ source:
   sha256: f941599d6f836d785c3b9ae14b53dc86fcb67881e5b5669ec8c2804245f4d7a0
 
 build:
-  noarch: python
+  skip: true  # [win or py<38]
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   host:
-    - python {{ python_min }}
+    - python
     - setuptools >=61.0
     - pip
+    - wheel
   run:
-    - python >={{ python_min }}
+    - python
     - pymeos-cffi >={{ minor_version }},<{{ next_minor_version }}
     - python-dateutil
     - shapely
@@ -37,7 +38,7 @@ test:
     - pip check
     - python -c "import pymeos; pymeos.pymeos_initialize('UTC'); pymeos.pymeos_finalize();"
   requires:
-    - python {{ python_min }}
+    - python
     - pip
 
 about:
@@ -47,6 +48,7 @@ about:
     functions in easy-to-use classes, allowing the user to perform operations on temporal and spatiotemporal data
     in Python without having to worry about the underlying C code.
   license: PostgreSQL
+  license_family: OTHER
   license_file: LICENSE.txt
   home: https://pymeos.readthedocs.io
   doc_url: https://pymeos.readthedocs.io

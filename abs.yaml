@@ -1,0 +1,10 @@
+build_env_vars:
+  ANACONDA_ROCKET_ENABLE_PY313: yes
+
+channels:
+  - https://staging.continuum.io/prefect/fs/meos-feedstock/pr1/36bdd3c
+  - https://staging.continuum.io/prefect/fs/pymeos-cffi-feedstock/pr1/4797592
+
+upload_channels:
+  - sfe1ed40
+
