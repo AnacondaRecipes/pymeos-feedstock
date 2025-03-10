@@ -4,3 +4,6 @@ build_env_vars:
 upload_channels:
   - sfe1ed40
 
+channels:
+  - https://staging.continuum.io/prefect/fs/meos-feedstock/pr1/36bdd3c
+  - https://staging.continuum.io/prefect/fs/pymeos-cffi-feedstock/pr1/4797592
