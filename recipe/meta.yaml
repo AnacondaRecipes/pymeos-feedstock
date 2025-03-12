@@ -1,44 +1,56 @@
 {% set name = "pymeos" %}
-{% set major = 1 %}
-{% set minor = 2 %}
-{% set patch = 0 %}
-{% set version = major ~ '.' ~ minor ~ '.' ~ patch %}
-{% set minor_version = major ~ '.' ~ minor %}
-{% set next_minor_version = major ~ '.' ~ (minor + 1) %}
+{% set version = "1.2.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: f941599d6f836d785c3b9ae14b53dc86fcb67881e5b5669ec8c2804245f4d7a0
+  url: https://github.com/MobilityDB/PyMEOS/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: 6c59eb6c2dfbf41b8fc7789301a46f37f9dbd80366cd08209b55e75c15b208b0
+  
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  # meos and pymeos-cffi is not available on win-64 and s390x
+  skip: True  # [s390x or win or py<38]
 
 requirements:
   host:
-    - python {{ python_min }}
+    - python
     - setuptools >=61.0
+    - wheel
     - pip
   run:
-    - python >={{ python_min }}
-    - pymeos-cffi >={{ minor_version }},<{{ next_minor_version }}
+    - python
+    - pymeos-cffi >=1.2.0,<2
     - python-dateutil
-    - shapely
+    - shapely >=2.0.0
+  run_constrained:
+    # dbp
+    - psycopg
+    # dbp2 
+    - psycopg2
+    # dba
+    - asyncpg
+    # plot 
+    - matplotlib
+    # pandas 
+    - geopandas
 
 test:
+  source_files:
+    - tests
   imports:
     - pymeos
   commands:
     - pip check
     - python -c "import pymeos; pymeos.pymeos_initialize('UTC'); pymeos.pymeos_finalize();"
+    - pytest -v tests
   requires:
-    - python {{ python_min }}
     - pip
+    - pytest
 
 about:
   summary: Python wrapper for the MEOS C Library.
@@ -48,6 +60,7 @@ about:
     in Python without having to worry about the underlying C code.
   license: PostgreSQL
   license_file: LICENSE.txt
+  license_family: OTHER
   home: https://pymeos.readthedocs.io
   doc_url: https://pymeos.readthedocs.io
   dev_url: https://github.com/MobilityDB/PyMEOS
